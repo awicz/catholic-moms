@@ -10,6 +10,8 @@ export interface Book {
   author: string;
   purchaseUrl?: string | null;
   whyHelpful?: string | null;
+  coverImageUrl?: string | null;
+  addedById?: number | null;
   addedByName: string;
   createdAt: string;
   categories: Category[];

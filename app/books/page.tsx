@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { auth } from '@/lib/auth';
 import { getBooks } from '@/lib/actions/books';
 import CategorySection from '@/components/books/CategorySection';
 
@@ -6,7 +7,9 @@ export const metadata = { title: 'Books — Catholic Moms' };
 export const dynamic = 'force-dynamic';
 
 export default async function BooksPage() {
-  const booksByCategory = await getBooks();
+  const [session, booksByCategory] = await Promise.all([auth(), getBooks()]);
+  const currentUserId = session?.user?.id ? Number(session.user.id) : null;
+  const isAdmin = session?.user?.isAdmin === true;
 
   return (
     <main className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
@@ -52,7 +55,7 @@ export default async function BooksPage() {
       ) : (
         <div className="space-y-12">
           {booksByCategory.map((entry) => (
-            <CategorySection key={entry.category.id} entry={entry} />
+            <CategorySection key={entry.category.id} entry={entry} currentUserId={currentUserId} isAdmin={isAdmin} />
           ))}
         </div>
       )}

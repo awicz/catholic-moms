@@ -17,7 +17,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!email || !password) return null;
 
         const rows = await sql`
-          SELECT id, name, email, password
+          SELECT id, name, email, password, is_admin
           FROM users
           WHERE email = ${email.toLowerCase().trim()}
           LIMIT 1
@@ -33,6 +33,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: String(user.id),
           name: user.name as string,
           email: user.email as string,
+          isAdmin: user.is_admin as boolean,
         };
       },
     }),
@@ -41,6 +42,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.isAdmin = (user as { isAdmin?: boolean }).isAdmin ?? false;
       }
       return token;
     },
@@ -48,6 +50,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token.id) {
         session.user.id = token.id as string;
       }
+      session.user.isAdmin = token.isAdmin === true;
       return session;
     },
   },

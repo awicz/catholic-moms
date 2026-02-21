@@ -3,9 +3,11 @@ import type { BooksByCategory } from '@/types';
 
 interface Props {
   entry: BooksByCategory;
+  currentUserId: number | null;
+  isAdmin: boolean;
 }
 
-export default function CategorySection({ entry }: Props) {
+export default function CategorySection({ entry, currentUserId, isAdmin }: Props) {
   return (
     <section id={entry.category.slug} className="scroll-mt-20">
       <h2 className="text-2xl font-serif font-bold text-stone-800 mb-4 pb-2 border-b border-stone-200">
@@ -13,7 +15,7 @@ export default function CategorySection({ entry }: Props) {
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {entry.books.map((book) => (
-          <BookCard key={book.id} book={book} />
+          <BookCard key={book.id} book={book} currentUserId={currentUserId} isAdmin={isAdmin} />
         ))}
       </div>
     </section>

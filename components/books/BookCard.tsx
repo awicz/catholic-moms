@@ -1,17 +1,35 @@
+import Link from 'next/link';
 import type { Book } from '@/types';
 
 interface Props {
   book: Book;
+  currentUserId: number | null;
+  isAdmin: boolean;
 }
 
-export default function BookCard({ book }: Props) {
+export default function BookCard({ book, currentUserId, isAdmin }: Props) {
+  const canEdit =
+    (currentUserId !== null && book.addedById === currentUserId) || isAdmin;
+
   return (
     <div className="bg-white rounded-lg border border-stone-200 p-5 flex flex-col gap-3 hover:border-rose-300 hover:shadow-sm transition-all">
-      <div>
-        <h3 className="font-serif font-semibold text-stone-900 text-lg leading-snug">
-          {book.title}
-        </h3>
-        <p className="text-stone-500 text-sm mt-0.5">by {book.author}</p>
+      {/* Cover + title/author */}
+      <div className="flex gap-3">
+        {book.coverImageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={book.coverImageUrl}
+            alt={`Cover of ${book.title}`}
+            className="w-12 object-cover rounded shrink-0 border border-stone-100"
+            style={{ height: '4.5rem' }}
+          />
+        )}
+        <div>
+          <h3 className="font-serif font-semibold text-stone-900 text-lg leading-snug">
+            {book.title}
+          </h3>
+          <p className="text-stone-500 text-sm mt-0.5">by {book.author}</p>
+        </div>
       </div>
 
       {book.whyHelpful && (
@@ -21,9 +39,17 @@ export default function BookCard({ book }: Props) {
       )}
 
       <div className="flex items-center justify-between mt-auto pt-2 border-t border-stone-100">
-        <span className="text-xs text-stone-400">
-          Added by {book.addedByName}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-stone-400">Added by {book.addedByName}</span>
+          {canEdit && (
+            <Link
+              href={`/books/${book.id}/edit`}
+              className="text-xs font-medium text-rose-600 hover:underline"
+            >
+              Edit
+            </Link>
+          )}
+        </div>
 
         {book.purchaseUrl && (
           <a

@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
   name       TEXT NOT NULL,
   email      TEXT NOT NULL UNIQUE,
   password   TEXT NOT NULL,           -- bcrypt hash, never plaintext
+  is_admin   BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -17,14 +18,15 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 
 CREATE TABLE IF NOT EXISTS books (
-  id            SERIAL PRIMARY KEY,
-  title         TEXT NOT NULL,
-  author        TEXT NOT NULL,
-  purchase_url  TEXT,                  -- nullable, link to purchase
-  why_helpful   VARCHAR(100),          -- max 100 chars
-  added_by_id   INTEGER REFERENCES users(id) ON DELETE SET NULL,
-  added_by_name TEXT NOT NULL,         -- denormalized: survives user deletion
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  id              SERIAL PRIMARY KEY,
+  title           TEXT NOT NULL,
+  author          TEXT NOT NULL,
+  purchase_url    TEXT,                  -- nullable, link to purchase
+  why_helpful     VARCHAR(100),          -- max 100 chars
+  cover_image_url TEXT,                  -- nullable, Vercel Blob URL or Google Books thumbnail
+  added_by_id     INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  added_by_name   TEXT NOT NULL,         -- denormalized: survives user deletion
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS book_categories (
@@ -32,6 +34,13 @@ CREATE TABLE IF NOT EXISTS book_categories (
   category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
   PRIMARY KEY (book_id, category_id)
 );
+
+-- ─── Migrations (run these on existing databases) ────────────────────────────
+-- ALTER TABLE books ADD COLUMN cover_image_url TEXT;
+-- ALTER TABLE users ADD COLUMN is_admin BOOLEAN NOT NULL DEFAULT false;
+-- After Kristi creates her account:
+-- UPDATE users SET is_admin = true WHERE email = 'kristi.kwicz@...';
+-- ─────────────────────────────────────────────────────────────────────────────
 
 -- Seed initial categories
 INSERT INTO categories (name, slug) VALUES

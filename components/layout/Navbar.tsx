@@ -23,6 +23,14 @@ export default function Navbar() {
 
           {session ? (
             <>
+              {session.user.isAdmin && (
+                <Link
+                  href="/admin"
+                  className="text-sm font-medium text-stone-600 hover:text-stone-900"
+                >
+                  Admin
+                </Link>
+              )}
               <Link
                 href="/books/add"
                 className="text-sm font-semibold bg-rose-700 text-white px-3 py-1.5 rounded-md hover:bg-rose-800 transition-colors"

@@ -10,8 +10,15 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isProtected = nextUrl.pathname.startsWith('/books/add');
-      if (isProtected) {
+      const isAdmin = !!(auth?.user as { isAdmin?: boolean })?.isAdmin;
+
+      if (nextUrl.pathname.startsWith('/admin')) {
+        return isAdmin;
+      }
+      if (
+        nextUrl.pathname.startsWith('/books/add') ||
+        /^\/books\/\d+\/edit$/.test(nextUrl.pathname)
+      ) {
         return isLoggedIn;
       }
       return true;

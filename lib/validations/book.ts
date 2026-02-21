@@ -9,6 +9,11 @@ export const bookSchema = z.object({
     .optional()
     .or(z.literal('')),
   whyHelpful: z.string().max(100, 'Please keep this to 100 characters or less').optional(),
+  coverImageUrl: z
+    .string()
+    .url('Cover image must be a valid URL')
+    .optional()
+    .or(z.literal('')),
   categoryIds: z
     .array(z.coerce.number())
     .min(1, 'Please select at least one category'),

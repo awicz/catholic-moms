@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { getCategories } from '@/lib/actions/books';
+import { getCategories, addBook } from '@/lib/actions/books';
 import BookForm from '@/components/books/BookForm';
 import Link from 'next/link';
 
@@ -27,7 +27,7 @@ export default async function AddBookPage() {
       </p>
 
       <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-8">
-        <BookForm categories={categories} />
+        <BookForm categories={categories} action={addBook} submitLabel="Add book" />
       </div>
     </main>
   );
