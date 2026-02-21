@@ -1,65 +1,85 @@
-import Image from "next/image";
+import Link from 'next/link';
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main>
+      {/* Hero */}
+      <section className="bg-gradient-to-b from-rose-50 to-[#fdf6ec] border-b border-rose-100 py-24 px-4 text-center">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-rose-700 text-sm font-semibold uppercase tracking-widest mb-4">
+            Our little corner of grace
           </p>
+          <h1 className="text-5xl sm:text-6xl font-serif font-bold text-stone-800 leading-tight mb-6">
+            Catholic Moms
+          </h1>
+          <p className="text-xl text-stone-600 mb-10 leading-relaxed">
+            A place to share the books, resources, and wisdom that have blessed us on our journey of faith and motherhood.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/books"
+              className="rounded-md bg-rose-700 px-6 py-3 font-semibold text-white hover:bg-rose-800 transition-colors"
+            >
+              Browse Books
+            </Link>
+            <Link
+              href="/auth/signup"
+              className="rounded-md border border-rose-300 bg-white px-6 py-3 font-semibold text-rose-800 hover:bg-rose-50 transition-colors"
+            >
+              Join the Group
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* How it works */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 py-20">
+        <h2 className="text-3xl font-serif font-bold text-stone-800 text-center mb-12">
+          Share what has helped you
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-700 text-xl font-bold font-serif">
+              1
+            </div>
+            <h3 className="font-serif font-semibold text-stone-800">Join the group</h3>
+            <p className="text-stone-600 text-sm">
+              Create a free account to become part of our community of Catholic moms.
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-700 text-xl font-bold font-serif">
+              2
+            </div>
+            <h3 className="font-serif font-semibold text-stone-800">Add a book</h3>
+            <p className="text-stone-600 text-sm">
+              Share a book that has blessed you, tag it by topic, and add a short note about why you loved it.
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-700 text-xl font-bold font-serif">
+              3
+            </div>
+            <h3 className="font-serif font-semibold text-stone-800">Discover &amp; grow</h3>
+            <p className="text-stone-600 text-sm">
+              Browse recommendations from other moms, filtered by the topics you care about most.
+            </p>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-rose-50 border-t border-rose-100 py-16 px-4 text-center">
+        <h2 className="text-2xl font-serif font-bold text-stone-800 mb-4">
+          Ready to explore?
+        </h2>
+        <Link
+          href="/books"
+          className="inline-block rounded-md bg-rose-700 px-6 py-3 font-semibold text-white hover:bg-rose-800 transition-colors"
+        >
+          Browse the Book List
+        </Link>
+      </section>
+    </main>
   );
 }
