@@ -41,8 +41,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     jwt({ token, user }) {
       if (user) {
+        // Fresh sign-in: copy fields from the authorize() return value into the token.
         token.id = user.id;
-        token.isAdmin = (user as { isAdmin?: boolean }).isAdmin ?? false;
+        token.isAdmin = (user as { isAdmin?: boolean }).isAdmin === true;
+      }
+      // Ensure isAdmin is always a boolean, never undefined (handles old tokens)
+      if (typeof token.isAdmin !== 'boolean') {
+        token.isAdmin = false;
       }
       return token;
     },

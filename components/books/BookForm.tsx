@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useRef } from 'react';
+import { useState, useTransition, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { upload } from '@vercel/blob/client';
 import { extractAsinOrIsbn, lookupByIsbn } from '@/lib/googleBooks';
@@ -41,29 +41,40 @@ export default function BookForm({
   const [isLookingUp, setIsLookingUp] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const charsLeft = 100 - whyHelpful.length;
 
   // Pre-selected category IDs for edit mode
   const preselectedIds = new Set(initialValues?.categories?.map((c) => c.id) ?? []);
 
-  async function handlePurchaseUrlBlur(e: React.FocusEvent<HTMLInputElement>) {
-    const url = e.target.value.trim();
-    if (!url) return;
+  // Fires in real-time as user types/pastes, debounced 600ms so we don't
+  // spam the Google Books API on every keystroke.
+  const handlePurchaseUrlChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const url = e.target.value.trim();
 
-    const id = extractAsinOrIsbn(url);
-    if (!id) return; // Not an Amazon URL — skip silently
+      if (debounceRef.current) clearTimeout(debounceRef.current);
 
-    setIsLookingUp(true);
-    const result = await lookupByIsbn(id);
-    setIsLookingUp(false);
+      if (!url) return;
 
-    if (result) {
-      // Only populate fields that are currently empty
-      if (!title && result.title) setTitle(result.title);
-      if (!author && result.author) setAuthor(result.author);
-      if (!coverImageUrl && result.coverImageUrl) setCoverImageUrl(result.coverImageUrl);
-    }
-  }
+      debounceRef.current = setTimeout(async () => {
+        const id = extractAsinOrIsbn(url);
+        if (!id) return; // Not an Amazon URL — skip silently
+
+        setIsLookingUp(true);
+        const result = await lookupByIsbn(id);
+        setIsLookingUp(false);
+
+        if (result) {
+          // Only populate fields that are currently empty
+          if (!title && result.title) setTitle(result.title);
+          if (!author && result.author) setAuthor(result.author);
+          if (!coverImageUrl && result.coverImageUrl) setCoverImageUrl(result.coverImageUrl);
+        }
+      }, 600);
+    },
+    [title, author, coverImageUrl],
+  );
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -124,7 +135,7 @@ export default function BookForm({
           name="purchaseUrl"
           type="url"
           defaultValue={initialValues?.purchaseUrl ?? ''}
-          onBlur={handlePurchaseUrlBlur}
+          onChange={handlePurchaseUrlChange}
           className={inputClass}
           placeholder="https://www.amazon.com/..."
         />
